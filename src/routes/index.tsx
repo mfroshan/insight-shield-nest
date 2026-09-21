@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import socHero from "@/assets/soc-hero.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -158,14 +160,24 @@ function Hero() {
       id="top"
       className="relative flex min-h-screen flex-col justify-center overflow-hidden px-6 pt-24"
     >
-      <div className="grid-backdrop pointer-events-none absolute inset-0" />
+      <img
+        src={socHero}
+        alt="Security operations centre with threat monitoring dashboards"
+        width={1920}
+        height={1088}
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-background)_5%,color-mix(in_oklab,var(--color-background)_80%,transparent)_45%,color-mix(in_oklab,var(--color-background)_35%,transparent)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(to_bottom,transparent,var(--color-background))]" />
+      <div className="grid-backdrop pointer-events-none absolute inset-0 opacity-40" />
       <div
-        className="pointer-events-none absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full opacity-30 blur-3xl"
+        className="pointer-events-none absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full opacity-25 blur-3xl"
         style={{
           background:
             "radial-gradient(circle, color-mix(in oklab, var(--color-primary) 60%, transparent), transparent 70%)",
         }}
       />
+
       <div className="relative mx-auto w-full max-w-6xl">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" />
