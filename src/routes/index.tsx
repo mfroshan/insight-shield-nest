@@ -1,6 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import socHero from "@/assets/soc-hero.jpg";
-
+import { Reveal } from "@/components/portfolio/Reveal";
+import { RecruiterMatcher } from "@/components/portfolio/RecruiterMatcher";
+import { SocWalkthrough } from "@/components/portfolio/SocWalkthrough";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,6 +42,8 @@ const NAV = [
   { id: "skills", label: "Skills" },
   { id: "experience", label: "Experience" },
   { id: "project", label: "Project" },
+  { id: "soc-lab", label: "SOC Lab" },
+  { id: "role-match", label: "Role Match" },
   { id: "education", label: "Education" },
   { id: "contact", label: "Contact" },
 ] as const;
@@ -122,6 +129,23 @@ const CERTS = [
 ];
 
 function NavBar() {
+  const [active, setActive] = useState("top");
+
+  useEffect(() => {
+    const sections = ["top", ...NAV.map((item) => item.id)]
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) setActive(visible.target.id);
+      },
+      { rootMargin: "-20% 0px -65% 0px", threshold: [0, 0.15, 0.5] },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -131,24 +155,20 @@ function NavBar() {
         >
           Roshan<span className="text-accent">.</span>
         </a>
-        <ul className="hidden items-center gap-7 md:flex">
+        <ul className="hidden items-center gap-5 lg:flex">
           {NAV.map((item) => (
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                aria-current={active === item.id ? "location" : undefined}
+                className={`text-xs font-medium transition-colors ${active === item.id ? "text-accent" : "text-muted-foreground hover:text-foreground"}`}
               >
                 {item.label}
               </a>
             </li>
           ))}
         </ul>
-        <a
-          href="#contact"
-          className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-        >
-          Get in touch
-        </a>
+        <Button asChild size="sm"><a href="#contact">Get in touch</a></Button>
       </nav>
     </header>
   );
@@ -248,11 +268,9 @@ function Hero() {
 
 function SectionHeading({ children }: { children: string }) {
   return (
-    <div className="section-rule mb-10">
-      <h2 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-primary sm:text-3xl">
-        {children}
-      </h2>
-    </div>
+    <Reveal><div className="section-rule mb-10">
+        <h2 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-primary sm:text-3xl">{children}</h2>
+    </div></Reveal>
   );
 }
 
@@ -377,6 +395,9 @@ function Project() {
               evidence processing, integrating Volatility, ALEAPP and YARA into
               one analysis workflow.
             </p>
+            <Button asChild variant="outline" className="mt-7">
+              <Link to="/case-studies/encrypted-recovery">Read full case study <ArrowRight /></Link>
+            </Button>
             <ul className="mt-5 space-y-3">
               <li className="flex gap-3">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
@@ -567,7 +588,9 @@ function Portfolio() {
         <Skills />
         <Experience />
         <Project />
+        <SocWalkthrough />
         <Education />
+        <RecruiterMatcher />
         <Contact />
       </main>
       <Footer />
