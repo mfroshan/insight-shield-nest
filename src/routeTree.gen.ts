@@ -10,33 +10,61 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CaseStudiesEncryptedRecoveryRouteImport } from './routes/case-studies.encrypted-recovery'
+import { Route as CaseStudiesSocInvestigationRouteImport } from './routes/case-studies.soc-investigation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaseStudiesEncryptedRecoveryRoute =
+  CaseStudiesEncryptedRecoveryRouteImport.update({
+    id: '/case-studies/encrypted-recovery',
+    path: '/case-studies/encrypted-recovery',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const CaseStudiesSocInvestigationRoute =
+  CaseStudiesSocInvestigationRouteImport.update({
+    id: '/case-studies/soc-investigation',
+    path: '/case-studies/soc-investigation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/case-studies/encrypted-recovery': typeof CaseStudiesEncryptedRecoveryRoute
+  '/case-studies/soc-investigation': typeof CaseStudiesSocInvestigationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/case-studies/encrypted-recovery': typeof CaseStudiesEncryptedRecoveryRoute
+  '/case-studies/soc-investigation': typeof CaseStudiesSocInvestigationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/case-studies/encrypted-recovery': typeof CaseStudiesEncryptedRecoveryRoute
+  '/case-studies/soc-investigation': typeof CaseStudiesSocInvestigationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/case-studies/encrypted-recovery' | '/case-studies/soc-investigation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    '/' | '/case-studies/encrypted-recovery' | '/case-studies/soc-investigation'
+  id:
+    | '__root__'
+    | '/'
+    | '/case-studies/encrypted-recovery'
+    | '/case-studies/soc-investigation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CaseStudiesEncryptedRecoveryRoute: typeof CaseStudiesEncryptedRecoveryRoute
+  CaseStudiesSocInvestigationRoute: typeof CaseStudiesSocInvestigationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +76,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/case-studies/encrypted-recovery': {
+      id: '/case-studies/encrypted-recovery'
+      path: '/case-studies/encrypted-recovery'
+      fullPath: '/case-studies/encrypted-recovery'
+      preLoaderRoute: typeof CaseStudiesEncryptedRecoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/case-studies/soc-investigation': {
+      id: '/case-studies/soc-investigation'
+      path: '/case-studies/soc-investigation'
+      fullPath: '/case-studies/soc-investigation'
+      preLoaderRoute: typeof CaseStudiesSocInvestigationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CaseStudiesEncryptedRecoveryRoute: CaseStudiesEncryptedRecoveryRoute,
+  CaseStudiesSocInvestigationRoute: CaseStudiesSocInvestigationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
